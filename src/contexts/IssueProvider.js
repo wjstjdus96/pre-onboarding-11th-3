@@ -2,7 +2,7 @@ import { useContext, useState, useMemo } from "react";
 import { IssueActionContext, IssueValueContext } from "./IssueContext";
 
 export function IssueProvider({ children }) {
-  const [issues, setIssues] = useState();
+  const [issues, setIssues] = useState([]);
 
   const actions = useMemo(
     () => ({
