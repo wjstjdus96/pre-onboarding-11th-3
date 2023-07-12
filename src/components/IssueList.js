@@ -9,25 +9,37 @@ import useDidMountEffect from "../hooks/useDidMountEffect";
 
 export default function IssueList() {
   const { loadIssue, toggleLoading } = useContext(IssueActionContext);
-  const { issues, isLoading } = useContext(IssueValueContext);
+  const { issues, isLoading, page } = useContext(IssueValueContext);
 
-  useEffect(() => {
-    getIssue(loadIssue);
-  }, []);
-
-  useDidMountEffect(() => {
+  const fetchIssues = async () => {
+    toggleLoading(true);
+    await getIssue(issues, loadIssue, page);
     toggleLoading(false);
-  }, [issues]);
+  };
+
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight && isLoading === false) {
+      fetchIssues();
+    }
+  };
 
   useEffect(() => {
-    console.log(issues);
-  }, [isLoading]);
+    // scroll event listener 등록
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      // scroll event listener 해제
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   return (
     <div>
       {!isLoading &&
         issues.map((item, idx) => (
-          <IssueCard key={item.id} id={idx + 1} data={item} />
+          <IssueCard key={idx} id={idx + 1} data={item} />
         ))}
     </div>
   );

@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
-const WANTED_IMAGE_URL =
-  "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fuserweb%2Flogo_wanted_black.png&w=110&q=100";
+import { WANTED_IMAGE_URL, WANTED_URL } from "../constants/const";
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,7 +40,7 @@ export default function IssueCard({ id, data }) {
   };
 
   const navigateWantedSite = () => {
-    window.location.replace("https://www.wanted.co.kr/");
+    window.location.replace(WANTED_URL);
   };
 
   return (

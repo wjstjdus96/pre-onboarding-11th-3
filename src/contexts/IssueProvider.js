@@ -2,7 +2,11 @@ import { useContext, useState, useMemo } from "react";
 import { IssueActionContext, IssueValueContext } from "./IssueContext";
 
 export function IssueProvider({ children }) {
-  const [states, setStates] = useState({ isLoading: false, issues: [] });
+  const [states, setStates] = useState({
+    isLoading: false,
+    page: 1,
+    issues: [],
+  });
 
   const actions = useMemo(
     () => ({
@@ -10,6 +14,7 @@ export function IssueProvider({ children }) {
         setStates((prev) => ({
           issues: prev.issues.concat(loadedIssue),
           isLoading: true,
+          page: prev.page + 1,
         }));
       },
       toggleLoading(bool) {
