@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+const WANTED_IMAGE_URL =
+  "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fuserweb%2Flogo_wanted_black.png&w=110&q=100";
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   border-bottom: 2px solid;
   padding: 8px;
-  cursor: pointer;
 `;
 
 const Part = styled.div`
@@ -19,6 +21,7 @@ const Part = styled.div`
   h4 {
     margin: 0;
     margin-bottom: 10px;
+    cursor: pointer;
   }
 `;
 
@@ -38,19 +41,32 @@ export default function IssueCard({ id, data }) {
     navigate(`/detail/${id}`);
   };
 
+  const navigateWantedSite = () => {
+    window.location.replace("https://www.wanted.co.kr/");
+  };
+
   return (
-    <Wrapper onClick={() => navigateDetail(id)}>
-      <Part>
-        <h4>
-          #{id} {data.title}
-        </h4>
-        <div>
-          작성자 : {data.user.login}, 작성일 : {date}
-        </div>
-      </Part>
-      <Part>
-        <div>코멘트: {data.comments}</div>
-      </Part>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <Part>
+          <h4 onClick={() => navigateDetail(id)}>
+            #{id} {data.title}
+          </h4>
+          <div>
+            작성자 : {data.user.login}, 작성일 : {date}
+          </div>
+        </Part>
+        <Part>
+          <div>코멘트: {data.comments}</div>
+        </Part>
+      </Wrapper>
+      {id % 4 == 0 && (
+        <Wrapper onClick={navigateWantedSite}>
+          <div>
+            <img src={WANTED_IMAGE_URL} />
+          </div>
+        </Wrapper>
+      )}
+    </>
   );
 }
