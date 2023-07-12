@@ -35,7 +35,7 @@ export default function IssueCard({ id, data }) {
   const navigate = useNavigate();
 
   const navigateDetail = (id) => {
-    navigate(`/detail?id=${id}`);
+    navigate(`/detail/${id}`);
   };
 
   return (
