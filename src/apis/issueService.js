@@ -4,7 +4,7 @@ import { IssueActionContext } from "../contexts/IssueContext";
 
 export const getIssue = async (handler) => {
   return await axiosClient
-    .get("/issues")
+    .get("/issues?sort=comments")
     .then((res) => {
       if (res.status == 200) {
         handler(res.data);
