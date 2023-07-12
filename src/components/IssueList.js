@@ -4,18 +4,29 @@ import {
   IssueActionContext,
   IssueValueContext,
 } from "../contexts/IssueContext";
+import IssueCard from "./IssueCard";
+import useDidMountEffect from "../hooks/useDidMountEffect";
 
 export default function IssueList() {
-  const { loadIssue } = useContext(IssueActionContext);
-  const { issues } = useContext(IssueValueContext);
+  const { loadIssue, toggleLoading } = useContext(IssueActionContext);
+  const { issues, isLoading } = useContext(IssueValueContext);
 
   useEffect(() => {
-    getIssue().then((res) => {
-      if (res.status == 200) {
-        loadIssue(res.data);
-      }
-    });
+    getIssue(loadIssue);
   }, []);
 
-  return <div>이슈</div>;
+  useDidMountEffect(() => {
+    toggleLoading(false);
+  }, [issues]);
+
+  useEffect(() => {
+    console.log(issues);
+  }, [isLoading]);
+
+  return (
+    <div>
+      {!isLoading &&
+        issues.map((item, idx) => <IssueCard key={item.id} data={item} />)}
+    </div>
+  );
 }
