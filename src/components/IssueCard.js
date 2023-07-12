@@ -22,7 +22,7 @@ const Part = styled.div`
   }
 `;
 
-export default function IssueCard({ key, data }) {
+export default function IssueCard({ id, data }) {
   const date = data.created_at
     .slice(0, 10)
     .split("-")
@@ -32,19 +32,17 @@ export default function IssueCard({ key, data }) {
       return item + "일";
     });
 
-  console.log(data.data);
-
   const navigate = useNavigate();
 
   const navigateDetail = (id) => {
-    navigate(`/detail/${id}`);
+    navigate(`/detail?id=${id}`);
   };
 
   return (
-    <Wrapper onClick={() => navigateDetail(data.id)}>
+    <Wrapper onClick={() => navigateDetail(id)}>
       <Part>
         <h4>
-          #{data.id} {data.title}
+          #{id} {data.title}
         </h4>
         <div>
           작성자 : {data.user.login}, 작성일 : {date}

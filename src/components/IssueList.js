@@ -26,7 +26,9 @@ export default function IssueList() {
   return (
     <div>
       {!isLoading &&
-        issues.map((item, idx) => <IssueCard key={item.id} data={item} />)}
+        issues.map((item, idx) => (
+          <IssueCard key={item.id} id={idx + 1} data={item} />
+        ))}
     </div>
   );
 }
