@@ -5,7 +5,6 @@ import {
   IssueValueContext,
 } from "../contexts/IssueContext";
 import IssueCard from "./IssueCard";
-import useDidMountEffect from "../hooks/useDidMountEffect";
 
 export default function IssueList() {
   const { toggleFetchLoading, loadMoreIssue } = useContext(IssueActionContext);

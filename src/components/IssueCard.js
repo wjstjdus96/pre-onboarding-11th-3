@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { WANTED_IMAGE_URL, WANTED_URL } from "../constants/const";
+import { calculateDate } from "../utils/calculateDate";
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,15 +25,7 @@ const Part = styled.div`
 `;
 
 export default function IssueCard({ id, data }) {
-  const date = data.created_at
-    .slice(0, 10)
-    .split("-")
-    .map((item, idx) => {
-      if (idx == 0) return item + "년 ";
-      if (idx == 1) return item + "월 ";
-      return item + "일";
-    });
-
+  const date = calculateDate(data.created_at);
   const navigate = useNavigate();
 
   const navigateDetail = (id) => {
