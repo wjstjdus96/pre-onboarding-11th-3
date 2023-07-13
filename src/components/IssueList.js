@@ -11,6 +11,7 @@ export default function IssueList() {
   const { toggleFetchLoading, loadMoreIssue } = useContext(IssueActionContext);
   const { issues, isLoading, page, isFetchLoading } =
     useContext(IssueValueContext);
+  const loading = isLoading || isFetchLoading;
 
   const fetchMoreIssues = async () => {
     toggleFetchLoading(true);
@@ -43,9 +44,7 @@ export default function IssueList() {
             {(idx + 1) % 4 == 0 && <IssueCard isAd={true} />}
           </>
         ))}
-      <div>
-        <Loading />
-      </div>
+      {loading && <Loading />}
     </div>
   );
 }

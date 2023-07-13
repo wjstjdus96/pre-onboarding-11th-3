@@ -6,29 +6,32 @@ import Header from "./components/Header";
 import { IssueProvider } from "./contexts/IssueProvider";
 
 const Layout = styled.div`
-  width: 500px;
-  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  & > div:first-child {
+    width: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 `;
-
-const Body = styled.div``;
 
 function App() {
   return (
-    <div className="App">
-      <Layout>
+    <Layout className="App">
+      <div>
         <BrowserRouter>
           <IssueProvider>
             <Header />
-            <Body>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/detail/:id" element={<Detail />} />
-              </Routes>
-            </Body>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/detail/:id" element={<Detail />} />
+            </Routes>
           </IssueProvider>
         </BrowserRouter>
-      </Layout>
-    </div>
+      </div>
+    </Layout>
   );
 }
 

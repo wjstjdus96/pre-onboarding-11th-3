@@ -34,7 +34,7 @@ const Part = styled.div`
   }
 `;
 
-export default function IssueCard({ id, isAd, data }) {
+export default function IssueCard({ id, isAd = false, data }) {
   const navigate = useNavigate();
 
   const navigateDetail = (id) => {
