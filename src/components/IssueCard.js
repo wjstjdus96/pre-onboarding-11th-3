@@ -8,6 +8,16 @@ const Wrapper = styled.div`
   justify-content: space-between;
   border-bottom: 2px solid;
   padding: 8px;
+  & > div:first-child {
+    flex-basis: 85%;
+  }
+`;
+
+const ImgContainer = styled.div`
+  flex-basis: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Part = styled.div`
@@ -15,7 +25,7 @@ const Part = styled.div`
   flex-direction: column;
   justify-content: center;
   div {
-    font-size: 13px;
+    font-size: 12px;
   }
   h4 {
     margin: 0;
@@ -24,8 +34,7 @@ const Part = styled.div`
   }
 `;
 
-export default function IssueCard({ id, data }) {
-  const date = calculateDate(data.created_at);
+export default function IssueCard({ id, isAd, data }) {
   const navigate = useNavigate();
 
   const navigateDetail = (id) => {
@@ -38,24 +47,26 @@ export default function IssueCard({ id, data }) {
 
   return (
     <>
-      <Wrapper>
-        <Part>
-          <h4 onClick={() => navigateDetail(id)}>
-            #{id} {data.title}
-          </h4>
-          <div>
-            작성자 : {data.user.login}, 작성일 : {date}
-          </div>
-        </Part>
-        <Part>
-          <div>코멘트: {data.comments}</div>
-        </Part>
-      </Wrapper>
-      {id % 4 == 0 && (
+      {isAd ? (
         <Wrapper onClick={navigateWantedSite}>
-          <div>
+          <ImgContainer>
             <img src={WANTED_IMAGE_URL} />
-          </div>
+          </ImgContainer>
+        </Wrapper>
+      ) : (
+        <Wrapper>
+          <Part>
+            <h4 onClick={() => navigateDetail(id)}>
+              #{id} {data.title}
+            </h4>
+            <div>
+              작성자 : {data.user.login}, 작성일 :
+              {calculateDate(data.created_at)}
+            </div>
+          </Part>
+          <Part>
+            <div>코멘트: {data.comments}</div>
+          </Part>
         </Wrapper>
       )}
     </>

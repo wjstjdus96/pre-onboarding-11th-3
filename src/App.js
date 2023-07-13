@@ -6,24 +6,28 @@ import Header from "./components/Header";
 import { IssueProvider } from "./contexts/IssueProvider";
 
 const Layout = styled.div`
-  width: 800px;
-  height: 200px;
+  width: 500px;
+  max-height: 400px;
 `;
+
+const Body = styled.div``;
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Layout>
+      <Layout>
+        <BrowserRouter>
           <IssueProvider>
             <Header />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/detail/:id" element={<Detail />} />
-            </Routes>
+            <Body>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/detail/:id" element={<Detail />} />
+              </Routes>
+            </Body>
           </IssueProvider>
-        </Layout>
-      </BrowserRouter>
+        </BrowserRouter>
+      </Layout>
     </div>
   );
 }
