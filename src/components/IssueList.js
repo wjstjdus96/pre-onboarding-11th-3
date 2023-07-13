@@ -5,6 +5,7 @@ import {
   IssueValueContext,
 } from "../contexts/IssueContext";
 import IssueCard from "./IssueCard";
+import Loading from "./Loading";
 
 export default function IssueList() {
   const { toggleFetchLoading, loadMoreIssue } = useContext(IssueActionContext);
@@ -37,8 +38,14 @@ export default function IssueList() {
     <div>
       {!isLoading &&
         issues.map((item, idx) => (
-          <IssueCard key={idx} id={idx + 1} data={item} />
+          <>
+            <IssueCard key={idx} id={idx + 1} data={item} />
+            {(idx + 1) % 4 == 0 && <IssueCard isAd={true} />}
+          </>
         ))}
+      <div>
+        <Loading />
+      </div>
     </div>
   );
 }
