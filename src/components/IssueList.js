@@ -5,30 +5,46 @@ import {
   IssueValueContext,
 } from "../contexts/IssueContext";
 import IssueCard from "./IssueCard";
-import useDidMountEffect from "../hooks/useDidMountEffect";
+import Loading from "./Loading";
 
 export default function IssueList() {
-  const { loadIssue, toggleLoading } = useContext(IssueActionContext);
-  const { issues, isLoading } = useContext(IssueValueContext);
+  const { toggleFetchLoading, loadMoreIssue } = useContext(IssueActionContext);
+  const { issues, isLoading, page, isFetchLoading } =
+    useContext(IssueValueContext);
+  const loading = isLoading || isFetchLoading;
+
+  const fetchMoreIssues = async () => {
+    toggleFetchLoading(true);
+    await getIssue(loadMoreIssue, page);
+    toggleFetchLoading(false);
+  };
+
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight && isFetchLoading === false) {
+      fetchMoreIssues();
+    }
+  };
 
   useEffect(() => {
-    getIssue(loadIssue);
-  }, []);
-
-  useDidMountEffect(() => {
-    toggleLoading(false);
-  }, [issues]);
-
-  useEffect(() => {
-    console.log(issues);
-  }, [isLoading]);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   return (
     <div>
       {!isLoading &&
         issues.map((item, idx) => (
-          <IssueCard key={item.id} id={idx + 1} data={item} />
+          <>
+            <IssueCard key={idx} id={idx + 1} data={item} />
+            {(idx + 1) % 4 == 0 && <IssueCard isAd={true} />}
+          </>
         ))}
+      {loading && <Loading />}
     </div>
   );
 }

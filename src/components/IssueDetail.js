@@ -5,14 +5,15 @@ import IssueCard from "./IssueCard";
 import { styled } from "styled-components";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
+import { defaultImageURL } from "../constants/const";
 
 const Head = styled.div`
   display: flex;
   align-items: stretch;
+  & > div:last-child {
+    flex-basis: 85%;
+  }
 `;
-
-const defaultImageURL =
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfuCqbbdMiMwU1McSWyZ0pyt8QNDUMWqLz4BktqWp7wQ&s";
 
 const Profile = styled.div`
   ${(props) =>
@@ -20,20 +21,21 @@ const Profile = styled.div`
       ? `background-image: url(${defaultImageURL});`
       : `background-image: url(${props.image});`};
   background-size: cover;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   margin: 10px;
 `;
 
 const Body = styled.div`
   padding: 20px;
+  overflow: auto;
+  font-size: 13px;
 `;
 
 export default function IssueDetail() {
   const id = useParams().id;
   const { issues } = useContext(IssueValueContext);
   const data = issues[id];
-  console.log(data);
 
   return (
     <div>

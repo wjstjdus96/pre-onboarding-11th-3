@@ -6,15 +6,22 @@ import Header from "./components/Header";
 import { IssueProvider } from "./contexts/IssueProvider";
 
 const Layout = styled.div`
-  width: 800px;
-  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  & > div:first-child {
+    width: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 `;
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Layout>
+    <Layout className="App">
+      <div>
+        <BrowserRouter>
           <IssueProvider>
             <Header />
             <Routes>
@@ -22,9 +29,9 @@ function App() {
               <Route path="/detail/:id" element={<Detail />} />
             </Routes>
           </IssueProvider>
-        </Layout>
-      </BrowserRouter>
-    </div>
+        </BrowserRouter>
+      </div>
+    </Layout>
   );
 }
 

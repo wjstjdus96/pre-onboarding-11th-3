@@ -1,12 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { WANTED_IMAGE_URL, WANTED_URL } from "../constants/const";
+import { calculateDate } from "../utils/calculateDate";
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   border-bottom: 2px solid;
   padding: 8px;
-  cursor: pointer;
+  & > div:first-child {
+    flex-basis: 85%;
+  }
+`;
+
+const ImgContainer = styled.div`
+  flex-basis: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Part = styled.div`
@@ -14,43 +25,50 @@ const Part = styled.div`
   flex-direction: column;
   justify-content: center;
   div {
-    font-size: 13px;
+    font-size: 12px;
   }
   h4 {
     margin: 0;
     margin-bottom: 10px;
+    cursor: pointer;
   }
 `;
 
-export default function IssueCard({ id, data }) {
-  const date = data.created_at
-    .slice(0, 10)
-    .split("-")
-    .map((item, idx) => {
-      if (idx == 0) return item + "년 ";
-      if (idx == 1) return item + "월 ";
-      return item + "일";
-    });
-
+export default function IssueCard({ id, isAd = false, data }) {
   const navigate = useNavigate();
 
   const navigateDetail = (id) => {
     navigate(`/detail/${id}`);
   };
 
+  const navigateWantedSite = () => {
+    window.location.replace(WANTED_URL);
+  };
+
   return (
-    <Wrapper onClick={() => navigateDetail(id)}>
-      <Part>
-        <h4>
-          #{id} {data.title}
-        </h4>
-        <div>
-          작성자 : {data.user.login}, 작성일 : {date}
-        </div>
-      </Part>
-      <Part>
-        <div>코멘트: {data.comments}</div>
-      </Part>
-    </Wrapper>
+    <>
+      {isAd ? (
+        <Wrapper onClick={navigateWantedSite}>
+          <ImgContainer>
+            <img src={WANTED_IMAGE_URL} />
+          </ImgContainer>
+        </Wrapper>
+      ) : (
+        <Wrapper>
+          <Part>
+            <h4 onClick={() => navigateDetail(id)}>
+              #{id} {data.title}
+            </h4>
+            <div>
+              작성자 : {data.user.login}, 작성일 :
+              {calculateDate(data.created_at)}
+            </div>
+          </Part>
+          <Part>
+            <div>코멘트: {data.comments}</div>
+          </Part>
+        </Wrapper>
+      )}
+    </>
   );
 }
