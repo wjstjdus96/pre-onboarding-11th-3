@@ -8,11 +8,11 @@ import { getIssue } from "../apis/issueService";
 
 export default function Home() {
   const { loadIssue, toggleLoading } = useContext(IssueActionContext);
-  const { issues, page } = useContext(IssueValueContext);
+  const { page } = useContext(IssueValueContext);
 
   const fetchIssues = async () => {
     toggleLoading(true);
-    await getIssue(issues, loadIssue, page);
+    await getIssue(loadIssue, page);
     toggleLoading(false);
   };
 

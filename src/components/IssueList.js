@@ -8,29 +8,28 @@ import IssueCard from "./IssueCard";
 import useDidMountEffect from "../hooks/useDidMountEffect";
 
 export default function IssueList() {
-  const { loadIssue, toggleLoading } = useContext(IssueActionContext);
-  const { issues, isLoading, page } = useContext(IssueValueContext);
+  const { toggleFetchLoading, loadMoreIssue } = useContext(IssueActionContext);
+  const { issues, isLoading, page, isFetchLoading } =
+    useContext(IssueValueContext);
 
-  const fetchIssues = async () => {
-    toggleLoading(true);
-    await getIssue(issues, loadIssue, page);
-    toggleLoading(false);
+  const fetchMoreIssues = async () => {
+    toggleFetchLoading(true);
+    await getIssue(loadMoreIssue, page);
+    toggleFetchLoading(false);
   };
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight && isLoading === false) {
-      fetchIssues();
+    if (scrollTop + clientHeight >= scrollHeight && isFetchLoading === false) {
+      fetchMoreIssues();
     }
   };
 
   useEffect(() => {
-    // scroll event listener 등록
     window.addEventListener("scroll", handleScroll);
     return () => {
-      // scroll event listener 해제
       window.removeEventListener("scroll", handleScroll);
     };
   });
