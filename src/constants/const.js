@@ -1,4 +1,4 @@
-export const ACCESS_TOKEN = "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";
+export const ACCESS_TOKEN = "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";
 export const BASE_URL = `https://api.github.com`;
 export const ORGANIZATION_NAME = "facebook";
 export const REPOSITORY_NAME = "react";

@@ -9,12 +9,14 @@ const Layout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   & > div:first-child {
-    width: 700px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    max-width: 700px;
   }
+`;
+
+const Body = styled.div`
+  padding-top: 65px;
+  overflow-x: hidden;
 `;
 
 function App() {
@@ -24,10 +26,12 @@ function App() {
         <BrowserRouter>
           <IssueProvider>
             <Header />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/detail/:id" element={<Detail />} />
-            </Routes>
+            <Body>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/detail/:id" element={<Detail />} />
+              </Routes>
+            </Body>
           </IssueProvider>
         </BrowserRouter>
       </div>

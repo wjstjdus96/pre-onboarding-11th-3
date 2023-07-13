@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import { axiosClient } from "./axiosClient";
-import { IssueActionContext } from "../contexts/IssueContext";
 
 export const getIssue = async (setHandler, page) => {
   return axiosClient
