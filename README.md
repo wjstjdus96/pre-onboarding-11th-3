@@ -14,19 +14,18 @@
 
 ```
 $ npm install
-$ process.env.REACT_APP_GIT_ISSUE_ACCESS_TOKEN="<개인Token>"
+$ process.env.REACT_APP_API_KEY="<개인Token>"
 $ npm run start
 ```
 
-## 프로젝트 링크
+## 실행화면
 
-[프로젝트 바로가기](https://main--dynamic-stardust-16b5d1.netlify.app/)
+![인턴십과제2](https://github.com/wjstjdus96/pre-onboarding-11th-3/assets/77755620/41dc855f-e489-41f5-893f-841a1377a94d)
 
 ## 개발환경
 
-- 언어 : typescript
+- 언어 : javascript
 - 라이브러리 및 프레임워크: react, axios, styled-components, react-router-dom, react-markdown
-- 배포 : netlify
 
 ## 폴더구조
 
@@ -48,106 +47,67 @@ $ npm run start
 - api 처리 함수 따로 분리
 - axios 인스턴스를 만들어 사용 => 중복되는 부분 최소화
 
-### Context API 연동
+### 전역 상태 관리를 위한 Context API 연동
 
-- 이슈 리스트와 이슈 디테일 나누어서 context 생성
-- 리스트 context는 issueList, fetchError 값과 fetchIssueList, setIssueList 함수를 관리
-- 디테일 context는 개별 issue, fetchError 값과 fetchIssue 함수를 관리
-- 로딩 context는 loading값과 setLoading 함수를 관리
+- 성능 최적화를 위하여 값과 함수를 분리하여 context생성
+- 값 context는 isLoading, isFetchLoading, page, issues를 관리
+- 함수 context는 loadIssue, loadMoreIssue, toggleLoading, toggleFetchLoading를 관리
+- 함수는 재사용을 위해 useMemo로 감싸 불필요한 리렌더링 방지
 
 ### 이슈 목록 구현
 
-- 하나의 이슈를 구성하는 IssueItem 컴포넌트를 생성
-- 리스트를 구현할 때 div 태그 말고 ul-li 태그 사용 => 리스트임이 좀 더 분명하게 보여짐
+- 하나의 이슈를 구성하는 IssueCard 컴포넌트를 생성
+- isAd props를 받아 true일 경우 광고 이미지를 출력하고 false일 경우 issue 출력하도록 삼항연산자 사용하여 구분
 
 ### 인피니티 스크롤 구현
 
-- intersection-observer를 사용하여 별도의 useInfiniteScroll 훅 생성
-- 특정 요소를 관찰자로 두고 이슈 리스트의 끝에서 교차하는 시점을 감지하게 함. 리스트 끝에 도달했을 때 이슈 데이터를 요청
+- documentElement의 필드 값을 사용하여 스크롤 이벤트 핸들러 함수 생성
+- 현재까지 내려온 높이와 화면의 높이가 전체 높이값보다 같거나 커지면 추가적으로 issue를 불러오도록 로직 적용
+- useEffect로 window 이벤트 핸들러로 추가하고 이벤트 리스너 중첩 방지를 위해 이전 리스너는 제거
 
-  ```typescript
-  const useInfiniteScroll = (target: RefObject<Element>) => {
-    const [Intersecting, setIntersecting] = useState(false);
-    const oberverRef = useRef<IntersectionObserver | null>(null);
-
-    const getObserver = useCallback(() => {
-      if (!oberverRef.current) {
-        oberverRef.current = new IntersectionObserver((entries) =>
-          setIntersecting(entries.some((entry) => entry.isIntersecting))
-        );
-      }
-      return oberverRef.current;
-    }, [oberverRef.current]);
-
-    useEffect(() => {
-      if (target.current) {
-        getObserver().observe(target.current);
-      }
-      return () => {
-        getObserver().disconnect();
-      };
-    }, [target.current]);
-
-    return Intersecting;
-  };
-  ```
+```typescript
+const handleScroll = () => {
+  const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+  console.log(scrollTop + clientHeight + " = " + scrollHeight);
+  if (
+    Math.ceil(scrollTop + clientHeight) >= scrollHeight &&
+    isFetchLoading === false
+  ) {
+    fetchMoreIssues();
+  }
+};
+```
 
 ### 광고 이미지 출력
 
-- Advertisement로 광고 출력 컴포넌트 분리
-- issueListPage에서 `map`을 사용하여 issue를 그려줄 때 index값을 확인하고 특정 index일 경우 Advertisement 컴포넌트를 렌더링함
+- IssueList에서 `map`을 사용하여 issue를 그려줄 때 index값을 확인하고 특정 index일 경우 isAd가 true인 IssueCard 컴포넌트 반환
   ```typescript
-   {(index + 1) % 4 === 0 && (
-            <a href="https://www.wanted.co.kr/">
-              <Advertisement />
-            </a>
-          )
+  {
+    (idx + 1) % 4 == 0 && <IssueCard isAd={true} />;
+  }
   ```
 
 ### 데이터 요청 중 로딩 표시
 
 - `keyframe` 사용하여 회전하는 Loading 컴포넌트 생성
-- 전역적으로 사용하는 로딩 컴포넌트는 최상위 컴포넌트인 App에 위치시킴
-- 로딩 상태값은 context를 사용하여 전역적으로 관리함
+- loading 상태에 따라 출력
 
 ### 상세 화면 구현
 
-- `useParams` 훅을 사용해 url의 파라미터를 받아 issueNumber로 변수 할당
-- issueNumber를 사용하여 해당 숫자의 issue를 `fetch`함
+- `useParams` 훅을 사용해 url의 파라미터를 받아 id로 변수 할당
+- id를 사용하여 해당 숫자의 issue를 `fetch`함
 
   ```typescript
-  const { issueNumber } = useParams<{ issueNumber: string }>();
-  const { issue, fetchIssue, fetchError } = useContext(DetailContext);
+  const id = useParams().id;
+  const [data, setData] = useState();
 
   useEffect(() => {
-    fetchIssue(parseInt(issueNumber || "", 10));
+    getOneIssue(id).then((res) => {
+      if (res.status == 200) {
+        setData(res.data);
+      }
+    });
   }, []);
   ```
 
 - `react-markdown` 라이브러리를 사용하여 마크다운언어를 렌더링함
-
-### 에러 화면 구현
-
-- ErrorPage 컴포넌트 생성하고 에러 메세지를 `props`로 받음
-- 에러 메세지가 담긴 context의 `fetchError`값을 사용하여 값이 있을 경우 ErrorPage 렌더링함
-
-### React.memo를 사용한 렌더링 최적화
-
-- props 변경이 없는 IssueListItem 컴포넌트에 React.memo 적용
-
-```typescript
-const IssueListItem = ({ issue }: { issue: any }) => (
-  <IssueListItemBox>
-    <IssueTitleWrapper>
-      <Link to={`/issue/${issue.number}`}>
-        <IssueNumber># {issue.number}</IssueNumber>
-        <IssueTitle>{issue.title}</IssueTitle>
-      </Link>
-    </IssueTitleWrapper>
-    <IssueUser>작성자 : {issue.user.login}</IssueUser>
-    <IssueDate>작성일 : {calculateDate(issue.created_at)}</IssueDate>
-    <IssueComments>코멘트 : {issue.comments}</IssueComments>
-  </IssueListItemBox>
-);
-export default React.memo(IssueListItem);
-```
