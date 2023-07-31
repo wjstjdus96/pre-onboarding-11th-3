@@ -23,9 +23,9 @@ const Profile = styled.div`
       ? `background-image: url(${defaultImageURL});`
       : `background-image: url(${props.image});`};
   background-size: cover;
-  width: 80px;
-  height: 80px;
-  margin: 10px;
+  width: 90px;
+  height: 90px;
+  margin: 10px 10px 0px 10px;
 `;
 
 const Body = styled.div`

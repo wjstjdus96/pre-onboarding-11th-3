@@ -20,10 +20,12 @@ export default function IssueList() {
   };
 
   const handleScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight && isFetchLoading === false) {
+    const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+    console.log(scrollTop + clientHeight + " = " + scrollHeight);
+    if (
+      Math.ceil(scrollTop + clientHeight) >= scrollHeight &&
+      isFetchLoading === false
+    ) {
       fetchMoreIssues();
     }
   };
