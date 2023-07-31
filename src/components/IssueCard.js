@@ -6,8 +6,8 @@ import { calculateDate } from "../utils/calculateDate";
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 2px solid;
-  padding: 8px;
+  border-bottom: 1px solid;
+  padding: 10px;
   & > div:first-child {
     flex-basis: 85%;
   }
@@ -18,23 +18,36 @@ const ImgContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 5px;
 `;
 
 const Part = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  div {
-    font-size: 12px;
-  }
+`;
+
+const Title = styled.div`
+  display: flex;
   h4 {
     margin: 0;
     margin-bottom: 10px;
     cursor: pointer;
   }
+  div:first-child {
+    flex-basis: 13%;
+    color: #005dad;
+  }
+  div:last-child {
+    flex-basis: 87%;
+  }
 `;
 
-export default function IssueCard({ id, isAd = false, data }) {
+const Sub = styled.div`
+  font-size: 12px;
+`;
+
+export default function IssueCard({ isAd = false, data }) {
   const navigate = useNavigate();
 
   const navigateDetail = (id) => {
@@ -56,16 +69,21 @@ export default function IssueCard({ id, isAd = false, data }) {
       ) : (
         <Wrapper>
           <Part>
-            <h4 onClick={() => navigateDetail(data.number)}>
-              #{data.number} {data.title}
-            </h4>
-            <div>
-              작성자 : {data.user.login}, 작성일 :
-              {calculateDate(data.created_at)}
-            </div>
+            <Title onClick={() => navigateDetail(data.number)}>
+              <div>
+                <h4>#{data.number}</h4>
+              </div>
+              <div>
+                <h4>{data.title}</h4>
+                <Sub>
+                  작성자 : {data.user.login}, 작성일 :
+                  {calculateDate(data.created_at)}
+                </Sub>
+              </div>
+            </Title>
           </Part>
           <Part>
-            <div>코멘트: {data.comments}</div>
+            <Sub>코멘트: {data.comments}</Sub>
           </Part>
         </Wrapper>
       )}

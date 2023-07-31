@@ -40,7 +40,7 @@ export default function IssueList() {
       {!isLoading &&
         issues.map((item, idx) => (
           <>
-            <IssueCard key={idx} id={idx + 1} data={item} />
+            <IssueCard key={idx} data={item} />
             {(idx + 1) % 4 == 0 && <IssueCard isAd={true} />}
           </>
         ))}
