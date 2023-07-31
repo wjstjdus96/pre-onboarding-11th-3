@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IssueValueContext } from "../contexts/IssueContext";
 import IssueCard from "./IssueCard";
 import { styled } from "styled-components";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";

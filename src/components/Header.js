@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
 import { ORGANIZATION_NAME, REPOSITORY_NAME } from "../constants/const";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -15,14 +16,20 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 5px;
+  cursor: pointer;
 `;
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const naviagteToHome = () => {
+    navigate("/");
+  };
   return (
-    <Wrapper>
-      <div>
+    <Wrapper onClick={naviagteToHome}>
+      <h4>
         {ORGANIZATION_NAME} / {REPOSITORY_NAME}
-      </div>
+      </h4>
     </Wrapper>
   );
 }
