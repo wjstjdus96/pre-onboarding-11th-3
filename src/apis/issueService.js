@@ -10,3 +10,7 @@ export const getIssue = async (setHandler, page) => {
     })
     .catch((err) => console.log(err));
 };
+
+export const getOneIssue = async (issueNum) => {
+  return axiosClient.get(`/issues/${issueNum}`);
+};

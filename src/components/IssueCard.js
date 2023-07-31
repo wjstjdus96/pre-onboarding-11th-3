@@ -56,8 +56,8 @@ export default function IssueCard({ id, isAd = false, data }) {
       ) : (
         <Wrapper>
           <Part>
-            <h4 onClick={() => navigateDetail(id)}>
-              #{id} {data.title}
+            <h4 onClick={() => navigateDetail(data.number)}>
+              #{data.number} {data.title}
             </h4>
             <div>
               작성자 : {data.user.login}, 작성일 :

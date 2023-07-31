@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IssueValueContext } from "../contexts/IssueContext";
 import IssueCard from "./IssueCard";
@@ -6,6 +6,8 @@ import { styled } from "styled-components";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
 import { defaultImageURL } from "../constants/const";
+import { getOneIssue } from "../apis/issueService";
+import Loading from "./Loading";
 
 const Head = styled.div`
   display: flex;
@@ -34,18 +36,31 @@ const Body = styled.div`
 
 export default function IssueDetail() {
   const id = useParams().id;
-  const { issues } = useContext(IssueValueContext);
-  const data = issues[id];
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    getOneIssue(id).then((res) => {
+      if (res.status == 200) {
+        setData(res.data);
+      }
+    });
+  }, []);
 
   return (
     <div>
-      <Head>
-        <Profile image={data.user.avatar_url} />
-        <IssueCard id={id} data={data} />
-      </Head>
-      <Body>
-        <ReactMarkdown children={data.body} remarkPlugins={[remarkGfm]} />
-      </Body>
+      {data ? (
+        <>
+          <Head>
+            <Profile image={data.user.avatar_url} />
+            <IssueCard id={data.number} data={data} />
+          </Head>
+          <Body>
+            <ReactMarkdown children={data.body} remarkPlugins={[remarkGfm]} />
+          </Body>
+        </>
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 }
