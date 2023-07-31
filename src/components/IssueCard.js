@@ -6,7 +6,7 @@ import { calculateDate } from "../utils/calculateDate";
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid;
+  border-bottom: 1px solid rgb(0, 0, 0, 0.5);
   padding: 10px;
   & > div:first-child {
     flex-basis: 85%;
@@ -36,7 +36,7 @@ const Title = styled.div`
   }
   div:first-child {
     flex-basis: 13%;
-    color: #005dad;
+    color: #438bfd;
   }
   div:last-child {
     flex-basis: 87%;
